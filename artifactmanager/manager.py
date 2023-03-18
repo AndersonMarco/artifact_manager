@@ -218,18 +218,3 @@ class Manager:
         return file_path_to_download.split('/hash=')[1].split("/")[0]
    
 
-user='admin'
-passwd='12345678'
-region='us-west-rack-2'
-host='http://localhost:9000'
-protocol=':s3:/'
-args=f" --s3-access-key-id {user} --s3-secret-access-key {passwd} --s3-region {region} --s3-endpoint {host}"
-#protocol=":sftp:/"
-#args="--sftp-port 22  --sftp-pass as7lqWqw2ed14xBAEs2awBPqNPer5vQ --sftp-user=teste01 --sftp-host 127.0.0.1"
-manager=Manager(protocol,args)
-#print(manager.list_all_files('artefacts/test_split_v2'))
-#print(manager.copy_to_cloud("../artifact_manager_v2/temp2","artefacts/"))
-#manager.copy_to_local("artefacts/archive.zip","../artifact_manager_v2/temp2",is_directory=False)
-#manager.copy_to_local("artefacts/temp2/temp2.tar","../artifact_manager_v2",download_file_with_specific_hash="8ba3fb56ac5cf5eaf6f860f1b3ed71d818218e5d2fc732bc6d880847a7ddb126")
-#manager.copy_to_local("artefacts/temp2/temp2.tar","../artifact_manager_v2/",download_file_with_specific_hash="6c8a8a82f2f250d530774a78987348ff7a250bdf4d5e5672ce865e531c3a6309")
-print(manager.copy_to_local("artefacts/temp2.tar","../artifact_manager_v2",is_directory=True))
