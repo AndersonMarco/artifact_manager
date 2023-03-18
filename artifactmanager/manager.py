@@ -81,27 +81,30 @@ class Manager:
         
         file_name=""
         in_path=in_path_arg
+        
         if(Path(in_path).is_dir()):
             utils.tar_directory(in_path,in_path+'.tar') 
             in_path=in_path+'.tar'
             file_name=os.path.basename(in_path)
         else:
             file_name=os.path.basename(in_path)
-            if(out_path[-1]=='/'):
-                out_path=out_path[:-1]
+        
+        if(out_path[-1]=='/'):
+            out_path=out_path[:-1]
         try:
             sha256=utils.calc_sha256(in_path)
         except:
             raise LocalPathDontExists
         dir_to_upload=Manager.__prepare_dir_to_upload_to_cloud(in_path,sha256)
+        if(Path(in_path_arg).is_dir()):
+            os.remove(in_path)
         if(self.__check_if_file_exists_in_remote(sha256,out_path+"/"+file_name)):
             shutil.rmtree(str(Path(dir_to_upload).parent))
-            return
+            return sha256
                 
         rclone._copy_move(dir_to_upload,self.__service+out_path+"/"+file_name,args=[self.__end_of_command])
         shutil.rmtree(str(Path(dir_to_upload).parent))
-        if(Path(in_path_arg).is_dir()):
-            os.remove(in_path)
+
         return sha256
     
     @staticmethod
@@ -181,7 +184,10 @@ class Manager:
             sha256=None
         
         if(is_directory):
-            os.remove(out_path)
+            try:
+                os.remove(out_path)
+            except:
+                pass
 
         if(sha256!=None and sha256==download_file_with_specific_hash):
             return
@@ -194,7 +200,7 @@ class Manager:
         if(download_file_with_specific_hash==None):
             file_path_to_download=Manager.get_the_newest_file_from_cloud(list_of_files)
             if(sha256!=None and "/hash="+sha256 in file_path_to_download):
-                return 
+                return sha256
         else:
             file_path_to_download=Manager.get_file_from_hash(download_file_with_specific_hash, list_of_files)
 
@@ -209,5 +215,21 @@ class Manager:
         rclone._copy_move(self.__service+orig_path__download,dst_path,args=[self.__end_of_command])
         
         Manager.handle_file_downloaded_from_cloud(dst_path,is_directory,os.path.basename(in_path))
-        return file_path_to_download.split('/hash=')[0].split("/")[0]
+        return file_path_to_download.split('/hash=')[1].split("/")[0]
    
+
+user='admin'
+passwd='12345678'
+region='us-west-rack-2'
+host='http://localhost:9000'
+protocol=':s3:/'
+args=f" --s3-access-key-id {user} --s3-secret-access-key {passwd} --s3-region {region} --s3-endpoint {host}"
+#protocol=":sftp:/"
+#args="--sftp-port 22  --sftp-pass as7lqWqw2ed14xBAEs2awBPqNPer5vQ --sftp-user=teste01 --sftp-host 127.0.0.1"
+manager=Manager(protocol,args)
+#print(manager.list_all_files('artefacts/test_split_v2'))
+#print(manager.copy_to_cloud("../artifact_manager_v2/temp2","artefacts/"))
+#manager.copy_to_local("artefacts/archive.zip","../artifact_manager_v2/temp2",is_directory=False)
+#manager.copy_to_local("artefacts/temp2/temp2.tar","../artifact_manager_v2",download_file_with_specific_hash="8ba3fb56ac5cf5eaf6f860f1b3ed71d818218e5d2fc732bc6d880847a7ddb126")
+#manager.copy_to_local("artefacts/temp2/temp2.tar","../artifact_manager_v2/",download_file_with_specific_hash="6c8a8a82f2f250d530774a78987348ff7a250bdf4d5e5672ce865e531c3a6309")
+print(manager.copy_to_local("artefacts/temp2.tar","../artifact_manager_v2",is_directory=True))
