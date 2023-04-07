@@ -44,12 +44,12 @@ manager.copy_to_cloud("/home/user/hello.txt","/artefacts")
 
 Copy the directory the in cloud path **/artifacts/hello_dir**   to local path  **/home/user** :
 ```python
-manager.copy_to_cloud("/artifacts/hello_dir.tar","/home/user", is_directory=True)
+manager.copy_to_local("/artifacts/hello_dir.tar","/home/user", is_directory=True)
 ```
 
 Copy the file the in cloud path **/artifacts/hello.txt**   to local path  **/home/user** :
 ```python
-manager.copy_to_cloud("/artifacts/hello_dir.tar","/home/user", is_directory=False)
+manager.copy_to_local("/artifacts/hello_dir.tar","/home/user", is_directory=False)
 ```
 
 ### Copy a specific version (defined by the hash) of a file or directory
@@ -57,5 +57,5 @@ manager.copy_to_cloud("/artifacts/hello_dir.tar","/home/user", is_directory=Fals
 Copy the directory the in cloud path **/artifacts/hello_dir**   to local path  **/home/user** :
 ```python
 hash="8ba3fb56ac5cf5eaf6f860f1b3ed71d818218e5d2fc732bc6d880847a7ddb126"
-manager.copy_to_cloud("/artifacts/hello_dir.tar","/home/user", is_directory=True,download_file_with_specific_hash=hash)
+manager.copy_to_local("/artifacts/hello_dir.tar","/home/user", is_directory=True,download_file_with_specific_hash=hash)
 ```
