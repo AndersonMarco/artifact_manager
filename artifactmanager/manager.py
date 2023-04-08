@@ -1,8 +1,8 @@
-import rclone_python_fixed as rclone
+import artifactmanager.rclone_python_fixed as rclone
 from rclone_python import remote_types
 from enum import Enum
 from pathlib import Path
-import utils
+import artifactmanager.utils as utils
 import uuid
 import os
 import pathlib
