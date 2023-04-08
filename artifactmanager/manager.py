@@ -71,7 +71,10 @@ class Manager:
 
     
     def __check_if_file_exists_in_remote(self,hash, path_to_file_in_cloud):
-        files=self.list_all_files(path_to_file_in_cloud)
+        try:
+            files=self.list_all_files(path_to_file_in_cloud)
+        except:
+            files=[]
         for file in files:
             if(('hash='+hash+"/") in file['Path']):
                 return True
